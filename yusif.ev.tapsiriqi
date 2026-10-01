@@ -1,0 +1,310 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace CafeSystem
+{
+    public partial class Form1 : Form
+    {
+        
+        Dictionary<string, double> qiymetler = new Dictionary<string, double>()
+        {
+            { "Tort", 5 },
+            { "Kola", 2 },
+            { "Şirə", 3 },
+            { "Burger", 6 },
+            { "Sendviç", 4 },
+            { "Pizza", 8 },
+            { "Maffin", 3 },
+            { "Hot Dog", 4 },
+            { "Peçenye", 2 }
+        };
+
+        
+        ListBox sebet = new ListBox();
+
+        TextBox mebleg = new TextBox();
+        TextBox qaliq = new TextBox();
+        TextBox hesab = new TextBox();
+
+        Button sebetdenSil = new Button();
+        Button yenile = new Button();
+        Button yekunHesab = new Button();
+        Button hesabla = new Button();
+        Button temizle = new Button();
+
+        public Form1()
+        {
+            InitializeComponent();
+
+           
+            this.Text = "Cafe system";
+            this.Width = 950;
+            this.Height = 650;
+            this.StartPosition = FormStartPosition.CenterScreen;
+
+         
+
+            Label cafe = new Label();
+            cafe.Text = "CAFE";
+            cafe.Font = new Font("Arial", 24, FontStyle.Bold);
+            cafe.Location = new Point(70, 30);
+            cafe.AutoSize = true;
+            this.Controls.Add(cafe);
+
+
+            Label meblegYazi = new Label();
+            meblegYazi.Text = "Məbləğ:";
+            meblegYazi.Location = new Point(30, 130);
+            meblegYazi.AutoSize = true;
+            this.Controls.Add(meblegYazi);
+
+            mebleg.Location = new Point(100, 125);
+            mebleg.Width = 120;
+            this.Controls.Add(mebleg);
+
+
+            Label qaliqYazi = new Label();
+            qaliqYazi.Text = "Qalıq:";
+            qaliqYazi.Location = new Point(30, 180);
+            qaliqYazi.AutoSize = true;
+            this.Controls.Add(qaliqYazi);
+
+            qaliq.Location = new Point(100, 175);
+            qaliq.Width = 120;
+            qaliq.ReadOnly = true;
+            this.Controls.Add(qaliq);
+
+
+            hesabla.Text = "Hesabla";
+            hesabla.Location = new Point(30, 230);
+            hesabla.Width = 190;
+            hesabla.Height = 40;
+            hesabla.BackColor = Color.Green;
+            hesabla.ForeColor = Color.White;
+            hesabla.Click += Hesabla_Click;
+            this.Controls.Add(hesabla);
+
+
+            temizle.Text = "Təmizlə";
+            temizle.Location = new Point(30, 280);
+            temizle.Width = 190;
+            temizle.Height = 40;
+            temizle.BackColor = Color.Red;
+            temizle.ForeColor = Color.White;
+            temizle.Click += Temizle_Click;
+            this.Controls.Add(temizle);
+
+
+         
+
+            Label menu = new Label();
+            menu.Text = "MENU";
+            menu.Font = new Font("Arial", 22, FontStyle.Bold);
+            menu.Location = new Point(420, 30);
+            menu.AutoSize = true;
+            this.Controls.Add(menu);
+
+
+           
+            YemekDuymesi("Tort", 280, 100);
+            YemekDuymesi("Kola", 400, 100);
+            YemekDuymesi("Şirə", 520, 100);
+
+            YemekDuymesi("Burger", 280, 180);
+            YemekDuymesi("Sendviç", 400, 180);
+            YemekDuymesi("Pizza", 520, 180);
+
+            YemekDuymesi("Maffin", 280, 260);
+            YemekDuymesi("Hot Dog", 400, 260);
+            YemekDuymesi("Peçenye", 520, 260);
+
+
+           
+
+            Label sebetYazi = new Label();
+            sebetYazi.Text = "Səbət";
+            sebetYazi.Font = new Font("Arial", 20, FontStyle.Bold);
+            sebetYazi.Location = new Point(720, 30);
+            sebetYazi.AutoSize = true;
+            this.Controls.Add(sebetYazi);
+
+
+            sebet.Location = new Point(700, 80);
+            sebet.Width = 210;
+            sebet.Height = 250;
+            this.Controls.Add(sebet);
+
+
+            sebetdenSil.Text = "Səbətdən sil";
+            sebetdenSil.Location = new Point(700, 350);
+            sebetdenSil.Width = 210;
+            sebetdenSil.Height = 40;
+            sebetdenSil.Click += SebetdenSil_Click;
+            this.Controls.Add(sebetdenSil);
+
+
+            yenile.Text = "Yenilə";
+            yenile.Location = new Point(700, 400);
+            yenile.Width = 100;
+            yenile.Height = 40;
+            yenile.Click += Yenile_Click;
+            this.Controls.Add(yenile);
+
+
+            yekunHesab.Text = "Yekun hesab";
+            yekunHesab.Location = new Point(810, 400);
+            yekunHesab.Width = 100;
+            yekunHesab.Height = 40;
+            yekunHesab.Click += YekunHesab_Click;
+            this.Controls.Add(yekunHesab);
+
+
+            // Hesab xanası
+            Label hesabYazi = new Label();
+            hesabYazi.Text = "Hesab:";
+            hesabYazi.Location = new Point(700, 470);
+            hesabYazi.AutoSize = true;
+            this.Controls.Add(hesabYazi);
+
+            hesab.Location = new Point(760, 465);
+            hesab.Width = 150;
+            hesab.ReadOnly = true;
+            this.Controls.Add(hesab);
+        }
+
+
+     
+
+        void YemekDuymesi(string yemekAdi, int x, int y)
+        {
+            Button button = new Button();
+
+            button.Text = yemekAdi + "\n" + qiymetler[yemekAdi] + " AZN";
+
+            button.Location = new Point(x, y);
+            button.Width = 100;
+            button.Height = 60;
+
+            button.Font = new Font("Arial", 10, FontStyle.Bold);
+
+            button.Click += delegate
+            {
+                sebet.Items.Add(yemekAdi);
+            };
+
+            this.Controls.Add(button);
+        }
+
+
+        
+
+        private void SebetdenSil_Click(object sender, EventArgs e)
+        {
+           
+            if (sebet.SelectedIndex == -1)
+            {
+                MessageBox.Show("Səbətdən silmək üçün yemək seçin!");
+                return;
+            }
+
+            
+            string yemekAdi = sebet.SelectedItem.ToString();
+
+            sebet.Items.RemoveAt(sebet.SelectedIndex);
+
+           
+            MessageBox.Show(yemekAdi + " səbətdən silindi");
+        }
+
+
+
+        private void Yenile_Click(object sender, EventArgs e)
+        {
+            DialogResult cavab = MessageBox.Show(
+                "Xanalar sıfırlansınmı?",
+                "Təsdiq",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+       
+            if (cavab == DialogResult.Yes)
+            {
+                mebleg.Clear();
+                qaliq.Clear();
+                hesab.Clear();
+
+                sebet.Items.Clear();
+            }
+
+        
+
+        private void YekunHesab_Click(object sender, EventArgs e)
+        {
+           
+            if (sebet.Items.Count == 0)
+            {
+                MessageBox.Show("Səbətdə yemək yoxdur!");
+                return;
+            }
+
+            double toplam = 0;
+
+            for (int i = 0; i < sebet.Items.Count; i++)
+            {
+                string yemekAdi = sebet.Items[i].ToString();
+
+                toplam = toplam + qiymetler[yemekAdi];
+            }
+
+            
+            hesab.Text = toplam.ToString("0.00") + " AZN";
+    
+
+        private void Hesabla_Click(object sender, EventArgs e)
+        {
+            
+            if (hesab.Text == "")
+            {
+                MessageBox.Show("Əvvəlcə yekun hesabı hesablayın!");
+                return;
+            }
+
+            double daxilEdilenMebleg;
+            double yekunHesab;
+
+            
+            if (!double.TryParse(mebleg.Text, out daxilEdilenMebleg))
+            {
+                MessageBox.Show("Məbləği düzgün daxil edin!");
+                return;
+            }
+
+            
+            string hesabMetni = hesab.Text.Replace(" AZN", "");
+
+            yekunHesab = double.Parse(hesabMetni);
+
+            
+            if (daxilEdilenMebleg < yekunHesab)
+            {
+                MessageBox.Show("Daxil edilən məbləğ hesabdan azdır");
+                return;
+            }
+
+     
+            double qaligPul = daxilEdilenMebleg - yekunHesab;
+
+            qaliq.Text = qaligPul.ToString("0.00") + " AZN";
+        }
+
+
+        private void Temizle_Click(object sender, EventArgs e)
+        {
+            mebleg.Clear();
+            qaliq.Clear();
+        }
+    }
+}
